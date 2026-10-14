@@ -89,9 +89,11 @@ class AnalizarClima:
 
         return mayor_amplitud
 
-
     def desviacion_historica(self):
         df_temp = self._df.copy()
+
+        df_temp['average_mean_temp'] = (df_temp['average_max_temp'] + df_temp['average_min_temp']) / 2
+
         df_temp['desviacion_media'] = df_temp['actual_mean_temp'] - df_temp['average_mean_temp']
 
         df_temp['mes'] = df_temp['date'].dt.to_period('M')
@@ -102,8 +104,9 @@ class AnalizarClima:
 
 
     def correlaciones(self, **kwargs):
-        columnas_numericas = ['actual_mean_temp', 'actual_max_temp', 'actual_min_temp', 'actual_precipitation', 'average_mean_temp', 'average_max_temp','average_min_temp', 'average_precipitation']
-        df_num = self._df[columnas_numericas]
+        df_num = self._df.drop(columns=['date'], errors='ignore')
+
+        df_num = df_num.select_dtypes(include=['number'])
 
         matriz_corr = df_num.corr(**kwargs)
         self._estadisticas['correlaciones'] = matriz_corr
