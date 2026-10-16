@@ -36,8 +36,6 @@ if __name__ == "__main__":
 
     except FileNotFoundError as e:
         print(f"\n[Error de archivo]: {e}")
-    except FileNotFoundError as e:
-        print(f"\n[Error de archivo]: {e}")
     except DatasetInvalidoError as e:
         print(f"\n[Error en el Dataset]: {e}")
     except ColumnaInexistenteError as e:
