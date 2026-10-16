@@ -1,5 +1,6 @@
 from carga import CargadorDatos
 from limpieza import Limpiador
+from analisis import AnalizarClima
 # from excepciones import DatasetInvalidoError, ColumnaInexistenteError
 
 if __name__ == "__main__":
@@ -23,7 +24,16 @@ if __name__ == "__main__":
         print("\n----- Exportando los resultados -----")
         ruta_salida = limpiador.exportar(ruta="grupo07_clima_phoenix_limpio.csv")
 
-        print(f"\n¡Proceso finalizado con éxito!")
+        print(f"\n----- Análisis y Estadísticas -----")
+        analizador = AnalizarClima(df_limpio)
+
+        estadisticas_totales = analizador.sacar_estadisticas()
+
+        print(f"\n¡Análisis completado con éxito!")
+        print(f"\nSe han generado las siguientes claves estadísticas: {list(estadisticas_totales.keys())}")
+
+
+        print(f"\n¡Proceso global finalizado con éxito!")
         print(f"Filas originales: {df_original.shape[0]} | Filas finales: {df_limpio.shape[0]}")
 
 
