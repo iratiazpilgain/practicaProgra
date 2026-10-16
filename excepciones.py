@@ -5,3 +5,8 @@ class DatasetInvalidoError(Exception):
 class ColumnaInexistenteError(Exception):
     #Al acceder a una columna que no existe.
     pass
+
+class ColumnaObligatoriaError(Exception):
+    # lo usamos cuando falta una columna obligatoria
+    pass
+
