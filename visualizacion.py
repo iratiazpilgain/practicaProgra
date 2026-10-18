@@ -162,7 +162,7 @@ class VisualizarClima(AnalizarClima):
 
     def generar_graficas(self): # para facilitar el main
         print('Generando temperaturas diarias')
-        self.temperaturas_lineas(salida='grafico_temperaturas_diarias.png')
+        self.temperaturas_lineas('temperaturas_lineas')
         print('Generando gráfico de barras trimestral')
         self.barras_trimestral()
         print('Generando histograma de lluvias')
