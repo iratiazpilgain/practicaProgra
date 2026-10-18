@@ -1,41 +1,17 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from analisis import AnalizarClima
-from carga import CargadorDatos
-from limpieza import Limpiador
+from errores import ColumnaObligatoriaError, ColumnaInexistenteError
 
-# cargamos los datos desde la funcion de irati
-cargador = CargadorDatos('grupo07_clima_phoenix.csv')
-df_bruto = cargador.cargar()  # lee el CSV y hace las primeras validaciones
-
-
-# limpiamos los datos
-limpiador = Limpiador(df_bruto)
-df_limpio = limpiador.limpiar()
-
-# generamos el archivo CSV limpio en la carpeta de resultados
-limpiador.exportar('dataset_limpio.csv')
-
-# definimos los errores peraonalizados
-class ColumnaObligatoriaError(Exception): # lo usamos cuando falta una columna ologatoria
-    def __init__(self, columna):
-        super().__init__(f'Falta la columna obligatoria {columna}')
-
-class ColumnaInexistenteError(Exception): # lo usamos cuando queremos dibujar una columna inexistente
-    def __init__(self, columna, disponibles=None):
-        mensaje = f'La columna extra {columna} no existe'
-        if disponibles:
-            mensaje = mensaje + f'Columnas disponibles: {list(disponibles)}'
-        super().__init__(mensaje)
 
 # definimos la clase hijo que hereda de AnalizarClima
 class VisualizarClima(AnalizarClima):
     def __init__(self, df):
         super().__init__(df)
         self.sacar_estadisticas()   # ejecutamos esto para que nos de el diccionario de estadísticas
-    #  (-------------------------------)
+
+
     #  definimos las funciones que dibujan y guardan nuestras gráficas
-    #  (-------------------------------)
 
     def barras_trimestral(self, salida='barras_trimestral.png'): #gráfico de barras con máximos, mínimos y medias trimestrales
         df_trimestral = self.estadisticas['trimestral'].copy() # copiamos el resumen trimestral del diccionario
@@ -187,15 +163,25 @@ class VisualizarClima(AnalizarClima):
         plt.close(fig)
         print(f'Gráfico de temperaturas diarias guardado como: {salida}')
 
-if __name__ == "__main__":
-    # Creamos el objeto pasándole el DataFrame limpio
-    mi_visor = VisualizarClima(df_limpio)
+    def generar_graficas(self): # para el main
+        print('Generando temperaturas diarias')
+        self.temperaturas_lineas(salida='grafico_temperaturas_diarias.png')
 
-    # Llamamos a los métodos para que generen y guarden los archivos PNG
-    mi_visor.barras_trimestral()
-    mi_visor.histograma_lluvias()
-    mi_visor.temperaturas_mensuales()
-    mi_visor.matriz_correlacion()
-    mi_visor.outliers()
-    mi_visor.temperaturas_lineas()
+        print("-> Generando boxplot de outliers...")
+        self.plot_boxplot_outliers(salida="boxplot_outliers_mensuales.png")
+
+
+def generar_graficas(self): # para facilitar el main
+    print('Generando temperaturas diarias')
+    self.temperaturas_lineas(salida='grafico_temperaturas_diarias.png')
+    print('Generando gráfico de barras trimestral')
+    self.barras_trimestral()
+    print('Generando histograma de lluvias')
+    self.histograma_lluvias()
+    print('Generando temperaturas mensuales')
+    self.temperaturas_mensuales()
+    print('Generando matriz de correlación')
+    self.matriz_correlacion()
+    print('Generando gráfico de outliers')
+    self.outliers()
 
