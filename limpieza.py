@@ -65,6 +65,34 @@ class Limpiador():
         self._informe["columnas_texto_limpiadas"] = list(columnas_texto)
         return self
 
+    def eliminar_vacios(self):
+        # Elimina filas y columnas completamente vacías.
+
+        filas_antes = len(self._df)
+        columnas_antes = len(self._df.columns)
+
+        self._df = self._df.dropna(axis=0, how="all")
+
+        self._df = self._df.dropna(axis=1, how="all")
+
+        self._df = self._df.reset_index(drop=True)
+
+        self._informe["filas_vacias_eliminadas"] = (filas_antes - len(self._df))
+
+        self._informe["columnas_vacias_eliminadas"] = (columnas_antes - len(self._df.columns))
+
+        return self
+
+    def detectar_constantes(self):
+        # Identifica columnas con un único valor distinto.
+
+        constantes = [col for col in self._df.columns if self._df[col].nunique(dropna=True) <= 1]
+
+        self._informe["columnas_constantes"] = constantes
+
+        return constantes
+
+
 
     def convertir_tipos(self, tipos):
 
@@ -72,7 +100,7 @@ class Limpiador():
             tipo = tipos[col]
 
             if col not in self.df.columns:
-                raise ColumnaInexistenteError(f"La columna '{col}' no existe")
+                raise ValueError(f"La columna '{col}' no existe")
 
             if tipo == "fecha":
                 self.df[col] = pd.to_datetime(self.df[col],errors="coerce")
@@ -135,19 +163,45 @@ class Limpiador():
         self._informe["nulos_tratados"] = int(nulos_tratados)
         return self
 
+    def mostrar_informe(self):
+        print("\n" + "=" * 50)
+        print("       INFORME DEL PROCESO DE LIMPIEZA")
+        print("=" * 50)
+
+        if not self.informe:
+            print("No hay información disponible.")
+            return
+
+        for operacion, resultado in self.informe.items():
+            titulo = operacion.replace("_", " ").capitalize()
+
+            if isinstance(resultado, list):
+                resultado = ", ".join(map(str, resultado)) if resultado else "Ninguno"
+
+            elif isinstance(resultado, dict):
+                resultado = ", ".join(
+                    f"{clave}: {valor}"
+                    for clave, valor in resultado.items()
+                )
+
+            print(f"{titulo:<35} | {resultado}")
+
+        print("=" * 50)
+
     def limpiar(self, estrategia="mediana", tipos=None):
         # Ejecuta el pipeline completo de limpieza.
         self.normalizar_columnas()
         self.limpiar_texto()
         self.eliminar_duplicados()
+        self.eliminar_vacios()
 
         if tipos is not None:
             self.convertir_tipos(tipos)
 
         self.tratar_nulos(estrategia=estrategia)
 
-        print("Limpieza terminada con éxito.")
-        print(self.informe)
+        print("\nLimpieza terminada con éxito.")
+        self.mostrar_informe()
 
         return self._df
 
@@ -158,3 +212,4 @@ class Limpiador():
         print(f"Dataset exportado en: {ruta}")
 
         return ruta
+
