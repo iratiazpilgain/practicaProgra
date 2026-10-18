@@ -1,4 +1,5 @@
 import pandas as pd
+from excepciones import ColumnaInexistenteError
 
 class AnalizarClima:
 
@@ -27,6 +28,10 @@ class AnalizarClima:
             columnas = ['actual_mean_temp', 'actual_max_temp', 'actual_precipitation']
         else:
             columnas = list(args)
+
+        faltan = [c for c in columnas if c not in self._df.columns]
+        if faltan:
+            raise ColumnaInexistenteError(f"Las columnas no existen: {faltan}")
 
         resumen = self._df[columnas].describe()
 
