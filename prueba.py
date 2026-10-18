@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from analisis import AnalizarClima
-from errores import ColumnaObligatoriaError, ColumnaInexistenteError
+from excepciones import ColumnaObligatoriaError, ColumnaInexistenteError
 
 
 # definimos la clase hijo que hereda de AnalizarClima
