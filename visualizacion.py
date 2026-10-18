@@ -77,7 +77,7 @@ class VisualizarClima(AnalizarClima):
 
     def matriz_correlacion(self, salida='matriz_correlacion.png'):
         if 'correlaciones' not in self.estadisticas:
-            raise ColumnaObligatoriaError('Falta la columna obligatoria correlaciones')
+            raise ColumnaObligatoriaError('correlaciones')
         df_corr = self.estadisticas['correlaciones']  # cogemos la matriz de correlación del padre
 
         fig, ax = plt.subplots(figsize=(8, 6))
@@ -97,7 +97,7 @@ class VisualizarClima(AnalizarClima):
 
     def outliers(self, salida='outliers.png'):
         if 'anomalias' not in self.estadisticas:
-            raise ColumnaObligatoriaError('Falta la columna obligatoria anomalias')
+            raise ColumnaObligatoriaError('anomalias')
 
         df_anomalias = self.estadisticas['anomalias'].copy()
         df_completo = self.df.copy()
@@ -122,17 +122,17 @@ class VisualizarClima(AnalizarClima):
 
 
 
-    def temperaturas_lineas(self, ruta_csv='dataset_limpio.csv', salida='temperaturas_lineas.png', *col_extra):
-        df = self.df.copy()
+    def temperaturas_lineas(self, salida='temperaturas_lineas.png', *col_extra):
         col_obligatorias = ['date', 'actual_max_temp', 'actual_mean_temp', 'actual_min_temp']
-        columnas_disponibles = list(df.columns)  # columnas disponibles
+        columnas_disponibles = list(self.df.columns)  # columnas disponibles
+        df = self.df.copy()
         for col in col_obligatorias:         # validamos obligatorias con el error personalizado
             if col not in df.columns:
-                raise ColumnaObligatoriaError(f'Falta la columna obligatoria {col}')
+                raise ColumnaObligatoriaError(col)
 
         for col in col_extra:  # validamos las extrasde *col_extra con el error personalizado
             if col not in df.columns:
-                raise ColumnaInexistenteError(f'La columna extra {col} no existe. Columnas disponibles: {list(columnas_disponibles)}')
+                raise ColumnaInexistenteError(col, columnas_disponibles)
 
         df_plot = df.copy()   # no podemos acceder a los datos del diccionario porque necesitamos TODOS los días
         df_plot['date'] = pd.to_datetime(df_plot['date'])
@@ -160,17 +160,17 @@ class VisualizarClima(AnalizarClima):
         print(f'Gráfico de temperaturas diarias guardado como: {salida}')
 
 
+    def generar_graficas(self): # para facilitar el main
+        print('Generando temperaturas diarias')
+        self.temperaturas_lineas(salida='grafico_temperaturas_diarias.png')
+        print('Generando gráfico de barras trimestral')
+        self.barras_trimestral()
+        print('Generando histograma de lluvias')
+        self.histograma_lluvias()
+        print('Generando temperaturas mensuales')
+        self.temperaturas_mensuales()
+        print('Generando matriz de correlación')
+        self.matriz_correlacion()
+        print('Generando gráfico de outliers')
+        self.outliers()
 
-def generar_graficas(self): # para facilitar el main
-    print('Generando temperaturas diarias')
-    self.temperaturas_lineas(salida='grafico_temperaturas_diarias.png')
-    print('Generando gráfico de barras trimestral')
-    self.barras_trimestral()
-    print('Generando histograma de lluvias')
-    self.histograma_lluvias()
-    print('Generando temperaturas mensuales')
-    self.temperaturas_mensuales()
-    print('Generando matriz de correlación')
-    self.matriz_correlacion()
-    print('Generando gráfico de outliers')
-    self.outliers()
