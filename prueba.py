@@ -123,12 +123,8 @@ class VisualizarClima(AnalizarClima):
 
 
     def temperaturas_lineas(self, ruta_csv='dataset_limpio.csv', salida='temperaturas_lineas.png', *col_extra):
+        df = self.df.copy()
         col_obligatorias = ['date', 'actual_max_temp', 'actual_mean_temp', 'actual_min_temp']
-        try:
-            df = pd.read_csv(ruta_csv)
-        except FileNotFoundError:
-            raise FileNotFoundError(f'No se encuentra el archivo en: {ruta_csv}')
-
         columnas_disponibles = list(df.columns)  # columnas disponibles
         for col in col_obligatorias:         # validamos obligatorias con el error personalizado
             if col not in df.columns:
@@ -163,12 +159,6 @@ class VisualizarClima(AnalizarClima):
         plt.close(fig)
         print(f'Gráfico de temperaturas diarias guardado como: {salida}')
 
-    def generar_graficas(self): # para el main
-        print('Generando temperaturas diarias')
-        self.temperaturas_lineas(salida='grafico_temperaturas_diarias.png')
-
-        print("-> Generando boxplot de outliers...")
-        self.plot_boxplot_outliers(salida="boxplot_outliers_mensuales.png")
 
 
 def generar_graficas(self): # para facilitar el main
