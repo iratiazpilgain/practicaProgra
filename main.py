@@ -61,3 +61,5 @@ if __name__ == "__main__":
         print(f"\n[Error inesperado]: {e}")
     else:
         print(f"\n¡Proceso global finalizado con éxito!")
+    finally:
+        print("Fin de la ejecución")
