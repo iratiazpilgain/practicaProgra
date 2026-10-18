@@ -1,6 +1,6 @@
 from carga import CargadorDatos
 from limpieza import Limpiador
-from analisis import AnalizarClima
+from Analisis import AnalizarClima
 from visualizacion import VisualizarClima
 from excepciones import DatasetInvalidoError
 from excepciones import ColumnaInexistenteError
