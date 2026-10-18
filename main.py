@@ -1,6 +1,7 @@
 from carga import CargadorDatos
 from limpieza import Limpiador
 from analisis import AnalizarClima
+from visualizacion import VisualizarClima
 # from excepciones import DatasetInvalidoError, ColumnaInexistenteError
 
 if __name__ == "__main__":
@@ -35,6 +36,11 @@ if __name__ == "__main__":
 
         print(f"\n¡Proceso global finalizado con éxito!")
         print(f"Filas originales: {df_original.shape[0]} | Filas finales: {df_limpio.shape[0]}")
+
+        print(f'\n----- Generación de Visualizaciones -----')
+        visualizador = VisualizarClima(df_limpio)
+        visualizador.generar_graficas()
+
 
 
     except FileNotFoundError as e:
