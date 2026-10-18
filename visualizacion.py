@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from analisis import AnalizarClima
+from Analisis import AnalizarClima
 from excepciones import ColumnaObligatoriaError, ColumnaInexistenteError
 
 
