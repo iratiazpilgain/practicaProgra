@@ -1,9 +1,6 @@
 import os
 import pandas as pd
-
-class DatasetInvalidoError(Exception):
-    # Excepción personalizada para errores en el formato o contenido de un dataset.
-    pass
+from excepciones import DatasetInvalidoError
 
 class CargadorDatos:
 
