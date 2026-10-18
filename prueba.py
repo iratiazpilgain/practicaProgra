@@ -77,7 +77,7 @@ class VisualizarClima(AnalizarClima):
 
     def matriz_correlacion(self, salida='matriz_correlacion.png'):
         if 'correlaciones' not in self.estadisticas:
-            raise ColumnaObligatoriaError('correlaciones')
+            raise ColumnaObligatoriaError('Falta la columna obligatoria correlaciones')
         df_corr = self.estadisticas['correlaciones']  # cogemos la matriz de correlación del padre
 
         fig, ax = plt.subplots(figsize=(8, 6))
@@ -97,7 +97,7 @@ class VisualizarClima(AnalizarClima):
 
     def outliers(self, salida='outliers.png'):
         if 'anomalias' not in self.estadisticas:
-            raise ColumnaObligatoriaError('anomalias')
+            raise ColumnaObligatoriaError('Falta la columna obligatoria anomalias')
 
         df_anomalias = self.estadisticas['anomalias'].copy()
         df_completo = self.df.copy()
@@ -132,11 +132,11 @@ class VisualizarClima(AnalizarClima):
         columnas_disponibles = list(df.columns)  # columnas disponibles
         for col in col_obligatorias:         # validamos obligatorias con el error personalizado
             if col not in df.columns:
-                raise ColumnaObligatoriaError(col)
+                raise ColumnaObligatoriaError(f'Falta la columna obligatoria {col}')
 
         for col in col_extra:  # validamos las extrasde *col_extra con el error personalizado
             if col not in df.columns:
-                raise ColumnaInexistenteError(col, columnas_disponibles)
+                raise ColumnaInexistenteError(f'La columna extra {col} no existe. Columnas disponibles: {list(columnas_disponibles)}')
 
         df_plot = df.copy()   # no podemos acceder a los datos del diccionario porque necesitamos TODOS los días
         df_plot['date'] = pd.to_datetime(df_plot['date'])
