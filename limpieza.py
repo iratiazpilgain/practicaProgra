@@ -1,5 +1,5 @@
 import pandas as pd
-
+from excepciones import ColumnaInexistenteError
 
 class Limpiador():
     def __init__(self, df):
@@ -72,7 +72,7 @@ class Limpiador():
             tipo = tipos[col]
 
             if col not in self.df.columns:
-                raise ValueError(f"La columna '{col}' no existe")
+                raise ColumnaInexistenteError(f"La columna '{col}' no existe")
 
             if tipo == "fecha":
                 self.df[col] = pd.to_datetime(self.df[col],errors="coerce")
