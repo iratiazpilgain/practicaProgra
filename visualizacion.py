@@ -2,13 +2,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from Analisis import AnalizarClima
 from excepciones import ColumnaObligatoriaError, ColumnaInexistenteError
+import os
 
 
 # definimos la clase hijo que hereda de AnalizarClima
 class VisualizarClima(AnalizarClima):
     def __init__(self, df):
         super().__init__(df)
-        self.sacar_estadisticas()   # ejecutamos esto para que nos de el diccionario de estadísticas
+        self.sacar_estadisticas()                     # ejecutamos esto para que nos de el diccionario de estadísticas
 
 
     #  definimos las funciones que dibujan y guardan nuestras gráficas
@@ -148,7 +149,7 @@ class VisualizarClima(AnalizarClima):
         for col in col_extra:    # dibujar las columnas extra
             ax.plot(df_plot['date'], df_plot[col], label=f'Extra {col}', linestyle='--', alpha=0.6)
 
-        ax.set_title('Evolución siaria de temperaturas')
+        ax.set_title('Evolución diaria de temperaturas')
         ax.set_xlabel('Fecha')
         ax.set_ylabel('Temperatura (en ºF)')
         ax.legend(loc='lower left')
@@ -161,16 +162,17 @@ class VisualizarClima(AnalizarClima):
 
 
     def generar_graficas(self): # para facilitar el main
+        os.makedirs('graficas', exist_ok=True)
         print('Generando temperaturas diarias')
-        self.temperaturas_lineas('temperaturas_lineas')
+        self.temperaturas_lineas('graficas/grafico_diarias.png', 'average_max_temp')
         print('Generando gráfico de barras trimestral')
-        self.barras_trimestral()
+        self.barras_trimestral('graficas/grafico_barras_trimestral.png')
         print('Generando histograma de lluvias')
-        self.histograma_lluvias()
+        self.histograma_lluvias('graficas/grafico_histograma_lluvias.png')
         print('Generando temperaturas mensuales')
-        self.temperaturas_mensuales()
+        self.temperaturas_mensuales('graficas/grafico_temperaturas_mensuales.png')
         print('Generando matriz de correlación')
-        self.matriz_correlacion()
+        self.matriz_correlacion('graficas/grafico_correlacion.png')
         print('Generando gráfico de outliers')
-        self.outliers()
+        self.outliers('graficas/grafico_outliers.png')
 
